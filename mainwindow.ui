@@ -64,7 +64,7 @@
            <widget class="QLabel" name="label_2">
             <property name="font">
              <font>
-              <family>DejaVu Sans Mono</family>
+              <family>楷体</family>
               <pointsize>11</pointsize>
               <weight>75</weight>
               <bold>true</bold>
@@ -76,16 +76,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEditLocalpwd">
-            <property name="font">
-             <font>
-              <family>DejaVu Sans Mono</family>
-              <pointsize>14</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-           </widget>
+           <widget class="QLineEdit" name="lineEditLocalpwd"/>
           </item>
           <item>
            <widget class="QLabel" name="m_pLabelState">
@@ -104,7 +95,7 @@
            <widget class="QLabel" name="label">
             <property name="font">
              <font>
-              <family>DejaVu Sans Mono</family>
+              <family>楷体</family>
               <pointsize>11</pointsize>
               <weight>75</weight>
               <bold>true</bold>
@@ -116,16 +107,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEditHostpwd">
-            <property name="font">
-             <font>
-              <family>DejaVu Sans Mono</family>
-              <pointsize>14</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-           </widget>
+           <widget class="QLineEdit" name="lineEditHostpwd"/>
           </item>
           <item>
            <widget class="QPushButton" name="pushButton">

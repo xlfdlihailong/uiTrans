@@ -42,7 +42,6 @@ public:
         tableWidget = new QTableWidget(Form);
         tableWidget->setObjectName(QStringLiteral("tableWidget"));
         tableWidget->setMinimumSize(QSize(55, 55));
-        tableWidget->setFont(font);
         tableWidget->setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
         tableWidget->setProperty("showDropIndicator", QVariant(true));
         tableWidget->setSortingEnabled(true);

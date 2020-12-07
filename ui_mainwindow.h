@@ -85,7 +85,7 @@ public:
         label_2 = new QLabel(centralWidget);
         label_2->setObjectName(QStringLiteral("label_2"));
         QFont font1;
-        font1.setFamily(QStringLiteral("DejaVu Sans Mono"));
+        font1.setFamily(QString::fromUtf8("\346\245\267\344\275\223"));
         font1.setPointSize(11);
         font1.setBold(true);
         font1.setWeight(75);
@@ -95,12 +95,6 @@ public:
 
         lineEditLocalpwd = new QLineEdit(centralWidget);
         lineEditLocalpwd->setObjectName(QStringLiteral("lineEditLocalpwd"));
-        QFont font2;
-        font2.setFamily(QStringLiteral("DejaVu Sans Mono"));
-        font2.setPointSize(14);
-        font2.setBold(true);
-        font2.setWeight(75);
-        lineEditLocalpwd->setFont(font2);
 
         horizontalLayout->addWidget(lineEditLocalpwd);
 
@@ -118,7 +112,6 @@ public:
 
         lineEditHostpwd = new QLineEdit(centralWidget);
         lineEditHostpwd->setObjectName(QStringLiteral("lineEditHostpwd"));
-        lineEditHostpwd->setFont(font2);
 
         horizontalLayout->addWidget(lineEditHostpwd);
 
@@ -151,7 +144,12 @@ public:
         textBrowser = new QTextBrowser(centralWidget);
         textBrowser->setObjectName(QStringLiteral("textBrowser"));
         textBrowser->setMaximumSize(QSize(16777215, 200));
-        textBrowser->setFont(font1);
+        QFont font2;
+        font2.setFamily(QStringLiteral("DejaVu Sans Mono"));
+        font2.setPointSize(11);
+        font2.setBold(true);
+        font2.setWeight(75);
+        textBrowser->setFont(font2);
 
         verticalLayout->addWidget(textBrowser);
 

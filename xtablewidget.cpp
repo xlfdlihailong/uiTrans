@@ -11,7 +11,7 @@ xTableWidget::xTableWidget(QWidget *parent) :
     //    pheader->setStyleSheet("QHeaderView::section{background-color:rgb(40,143,218);font:14pt 'DejaVu Sans Mono';color: white;};");
     //     pheader->setStyleSheet("QHeaderView::section{font:12pt 'DejaVu Sans Mono';};");
 //         pheader->setStyleSheet("QHeaderView::section{font:bold 12pt 'DejaVu Sans Mono';};");
-    pheader->setStyleSheet("QHeaderView::section{font:bold 11pt '楷体';};");
+    pheader->setStyleSheet("QHeaderView::section{font:bold 10pt '楷体';};");
 //    pheader->setDefaultAlignment (Qt::AlignLeft | Qt::AlignVCenter); //居左
 
     //header的个数,列个数
