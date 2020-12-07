@@ -3959,6 +3959,27 @@ public:
         string stres=strhost+":"+strfind;
         return  stres;
     }
+    //直接读取cmd,加了cmd /c
+    static pstring getCmdDirectFun(pstring cmd,std::function<void(pstring)> fun)
+    {
+        pstring cmdfull="cmd /c "+cmd;
+        FILE *file;
+        char ptr[65535] = { 0 };
+        char tmp[65535] = { 0 };
+        strcat_s(ptr, cmdfull.c_str());
+        string result = "";
+        if ((file = _popen(ptr, "r")) != NULL)
+        {
+            while (fgets(tmp, 65535, file) != NULL)
+            {
+//                hlog(tmp);
+                fun(tmp);
+                result = result + tmp;
+            }
+            _pclose(file);
+        }
+        return result;
+    }
     //获取命令执行结果
     //完美解决弹出黑框问题,适用于需要过程的 直接cmd的话hlog(plib::getCmdOutput("cmd /c dir"));
     //    hlog(trans.uploadFileCallback(host,"D:\\qt-opensource-windows-x86-mingw492-5.5.0.exe",
@@ -5569,5 +5590,54 @@ public:
     }
 
 };
+class pscp
+{
+public:
+    pscp(pstring host,pstring user="root",pstring pwd="npants0703***",int port=22)
+    {
+        this->host=host;
+        this->user=user;
+        this->pwd=pwd;
+        this->port=port;
 
+    }
+    //线程下载,支持文件夹
+    void downloadThread(pstring strFullPathLocal,pstring strFullPathRemote,std::function<void(pstring)> fun)
+    {
+        std::thread pthUploadFile(
+                    &pscp::download,this,strFullPathLocal,strFullPathRemote,fun);
+        pthUploadFile.detach();
+    }
+    //普通下载,支持文件夹
+    void download(pstring strFullPathLocal,pstring strFullPathRemote,std::function<void(pstring)> fun)
+    {
+        pstring cmd="pscp.exe -P "+plib::toString(this->port)+" -r -l "+this->user+" -pw "+this->pwd+" "+this->host+":"+strFullPathRemote+" "+strFullPathLocal;
+        hlog(cmd);
+        hlog(plib::toChinese(cmd));
+        //hlog(plib::getCmdOutputFun("pscp.exe -l root -pw sjcsfwq 106.12.222.93:/root/VNC-Server-6.7.2-Linux-x64-ANY.tar.gz C:/Users/Administrator/Desktop",fun));
+        (plib::getCmdOutputFun(cmd,fun));
+    }
+    //线程上传,支持文件夹
+    void uploadThread(pstring strFullPathLocal,pstring strFullPathRemote,std::function<void(pstring)> fun)
+    {
+        std::thread pthUploadFile(
+                    &pscp::upload,this,strFullPathLocal,strFullPathRemote,fun);
+        pthUploadFile.detach();
+    }
+    //普通上传,支持文件夹
+    void upload(pstring strFullPathLocal,pstring strFullPathRemote,std::function<void(pstring)> fun)
+    {
+        pstring cmd="pscp.exe -P "+plib::toString(this->port)+" -r -l "+this->user+" -pw "+this->pwd+" "+strFullPathLocal+" "+this->host+":"+strFullPathRemote;
+        hlog(cmd);
+        (plib::getCmdOutputFun(cmd,fun));
+        //ui程序会弹黑框
+//        plib::getCmdDirectFun(cmd,fun);
+    }
+
+private:
+    pstring host;
+    pstring pwd;
+    pstring user;
+    int port;
+};
 #endif // PLIB_H

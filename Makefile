@@ -188,6 +188,7 @@ Makefile: uiTrans.pro C:\Qt\Qt5.5.0\5.5\msvc2013\mkspecs\win32-msvc2013\qmake.co
 		C:\Qt\Qt5.5.0\5.5\msvc2013\mkspecs\features\win32\qt_config.prf \
 		C:\Qt\Qt5.5.0\5.5\msvc2013\mkspecs\win32-msvc2013\qmake.conf \
 		C:\Qt\Qt5.5.0\5.5\msvc2013\mkspecs\features\spec_post.prf \
+		.qmake.stash \
 		C:\Qt\Qt5.5.0\5.5\msvc2013\mkspecs\features\exclusive_builds.prf \
 		C:\Qt\Qt5.5.0\5.5\msvc2013\mkspecs\features\default_pre.prf \
 		C:\Qt\Qt5.5.0\5.5\msvc2013\mkspecs\features\win32\default_pre.prf \
@@ -330,6 +331,7 @@ C:\Qt\Qt5.5.0\5.5\msvc2013\mkspecs\features\qt_config.prf:
 C:\Qt\Qt5.5.0\5.5\msvc2013\mkspecs\features\win32\qt_config.prf:
 C:\Qt\Qt5.5.0\5.5\msvc2013\mkspecs\win32-msvc2013\qmake.conf:
 C:\Qt\Qt5.5.0\5.5\msvc2013\mkspecs\features\spec_post.prf:
+.qmake.stash:
 C:\Qt\Qt5.5.0\5.5\msvc2013\mkspecs\features\exclusive_builds.prf:
 C:\Qt\Qt5.5.0\5.5\msvc2013\mkspecs\features\default_pre.prf:
 C:\Qt\Qt5.5.0\5.5\msvc2013\mkspecs\features\win32\default_pre.prf:
@@ -369,7 +371,7 @@ clean: debug-clean release-clean  FORCE
 	-$(DEL_FILE) uiTrans.idb
 distclean: debug-distclean release-distclean  FORCE
 	-$(DEL_FILE) Makefile
-	-$(DEL_FILE) uiTrans.lib uiTrans.pdb
+	-$(DEL_FILE) .qmake.stash uiTrans.lib uiTrans.pdb
 
 debug-mocclean:
 	@set MAKEFLAGS=$(MAKEFLAGS)

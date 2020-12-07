@@ -25,6 +25,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 #include "xtablewidget.h"
+#include "xtreewidget.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -32,16 +33,16 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralWidget;
+    QVBoxLayout *verticalLayout_2;
     QHBoxLayout *horizontalLayout_4;
+    xTreeWidget *ptree;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout;
     QLabel *label_2;
     QLineEdit *lineEditLocalpwd;
-    QPushButton *pushButtonupdatelocal;
     QLabel *m_pLabelState;
     QLabel *label;
     QLineEdit *lineEditHostpwd;
-    QPushButton *pushButton_3;
     QPushButton *pushButton;
     QHBoxLayout *horizontalLayout_3;
     xTableWidget *ptablelocal;
@@ -54,17 +55,26 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(1502, 1041);
+        MainWindow->resize(1877, 1041);
         QFont font;
         font.setFamily(QStringLiteral("DejaVu Sans Mono"));
         MainWindow->setFont(font);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        horizontalLayout_4 = new QHBoxLayout(centralWidget);
-        horizontalLayout_4->setSpacing(0);
-        horizontalLayout_4->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_2 = new QVBoxLayout(centralWidget);
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setSpacing(6);
         horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
-        horizontalLayout_4->setContentsMargins(0, 0, 0, 0);
+        ptree = new xTreeWidget(centralWidget);
+        ptree->setObjectName(QStringLiteral("ptree"));
+        ptree->setMinimumSize(QSize(300, 300));
+        ptree->setMaximumSize(QSize(300, 16777215));
+
+        horizontalLayout_4->addWidget(ptree);
+
         verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(9);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
@@ -75,7 +85,8 @@ public:
         label_2 = new QLabel(centralWidget);
         label_2->setObjectName(QStringLiteral("label_2"));
         QFont font1;
-        font1.setPointSize(14);
+        font1.setFamily(QStringLiteral("DejaVu Sans Mono"));
+        font1.setPointSize(11);
         font1.setBold(true);
         font1.setWeight(75);
         label_2->setFont(font1);
@@ -84,15 +95,14 @@ public:
 
         lineEditLocalpwd = new QLineEdit(centralWidget);
         lineEditLocalpwd->setObjectName(QStringLiteral("lineEditLocalpwd"));
-        lineEditLocalpwd->setFont(font1);
+        QFont font2;
+        font2.setFamily(QStringLiteral("DejaVu Sans Mono"));
+        font2.setPointSize(14);
+        font2.setBold(true);
+        font2.setWeight(75);
+        lineEditLocalpwd->setFont(font2);
 
         horizontalLayout->addWidget(lineEditLocalpwd);
-
-        pushButtonupdatelocal = new QPushButton(centralWidget);
-        pushButtonupdatelocal->setObjectName(QStringLiteral("pushButtonupdatelocal"));
-        pushButtonupdatelocal->setFont(font1);
-
-        horizontalLayout->addWidget(pushButtonupdatelocal);
 
         m_pLabelState = new QLabel(centralWidget);
         m_pLabelState->setObjectName(QStringLiteral("m_pLabelState"));
@@ -108,15 +118,9 @@ public:
 
         lineEditHostpwd = new QLineEdit(centralWidget);
         lineEditHostpwd->setObjectName(QStringLiteral("lineEditHostpwd"));
-        lineEditHostpwd->setFont(font1);
+        lineEditHostpwd->setFont(font2);
 
         horizontalLayout->addWidget(lineEditHostpwd);
-
-        pushButton_3 = new QPushButton(centralWidget);
-        pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
-        pushButton_3->setFont(font1);
-
-        horizontalLayout->addWidget(pushButton_3);
 
         pushButton = new QPushButton(centralWidget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
@@ -146,21 +150,21 @@ public:
 
         textBrowser = new QTextBrowser(centralWidget);
         textBrowser->setObjectName(QStringLiteral("textBrowser"));
-        QFont font2;
-        font2.setPointSize(11);
-        font2.setBold(true);
-        font2.setWeight(75);
-        textBrowser->setFont(font2);
+        textBrowser->setMaximumSize(QSize(16777215, 200));
+        textBrowser->setFont(font1);
 
         verticalLayout->addWidget(textBrowser);
 
 
         horizontalLayout_4->addLayout(verticalLayout);
 
+
+        verticalLayout_2->addLayout(horizontalLayout_4);
+
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1502, 23));
+        menuBar->setGeometry(QRect(0, 0, 1877, 23));
         MainWindow->setMenuBar(menuBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
@@ -175,10 +179,8 @@ public:
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
         label_2->setText(QApplication::translate("MainWindow", "\346\234\254\345\234\260\345\275\223\345\211\215\350\267\257\345\276\204:", 0));
-        pushButtonupdatelocal->setText(QApplication::translate("MainWindow", "\345\210\267\346\226\260", 0));
         m_pLabelState->setText(QString());
         label->setText(QApplication::translate("MainWindow", "\346\234\215\345\212\241\345\231\250\345\275\223\345\211\215\350\267\257\345\276\204:", 0));
-        pushButton_3->setText(QApplication::translate("MainWindow", "\345\210\267\346\226\260", 0));
         pushButton->setText(QApplication::translate("MainWindow", "PushButton", 0));
     } // retranslateUi
 

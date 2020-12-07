@@ -53,7 +53,7 @@ public:
     //根据行数和列名获取当前内容
     QString getItemText(int row,QString strNameCol);
     void removeRow(int row);
-    void clear();
+
     //右键弹出菜单添加选项,为了外部MainWindow中使用
     void addAction(QAction *paction);
     //获取某一行的checkbox
@@ -76,7 +76,7 @@ signals:
     void sigDoubleClick(int row,int col);
 
 private slots:
-
+    void clear();
     //支持排序追踪的界面更新,按格式来
     void slotUpdateTable(plist<pmap<pstring,pstring>> lmdata, int keyid);
     void on_tableWidget_cellClicked(int row, int column);

@@ -3,13 +3,6 @@
 #include <QFileInfo>
 #include <QStorageInfo>
 
-void MainWindow::on_pushButton_clicked()
-{
-
-}
-
-
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -17,7 +10,23 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     qlog(plib::pwd());
     this->setWindowTitle("linux远程工具");
-
+    ui->ptree->addRoot("服务器列表");
+    plib::setPathConf("host.conf");
+    int count=0;
+    while(1)
+    {
+        count++;
+        pstring host=plib::getConfString("basic","host"+plib::toString(count));
+        if(host=="")
+            break;
+        pstring pwd=plib::getConfString("basic","pwd"+plib::toString(count));
+        hlog(host,pwd);
+        mall.add(host,pwd);
+        auto jointnew=ui->ptree->newJoint(host.c_str());
+        ui->ptree->root()->addChild(jointnew);
+    }
+    ui->ptree->expandAll();
+    hlog(mall);
 
     pActionDelLocal=new QAction("删除",this);
     ui->ptablelocal->addAction(pActionDelLocal);
@@ -37,28 +46,72 @@ MainWindow::MainWindow(QWidget *parent) :
     pActionRenameRemote=new QAction("重命名",this);
     ui->ptableRemote->addAction(pActionRenameRemote);
     connect(pActionRenameRemote,SIGNAL(triggered(bool)),this,SLOT(slotRenameRemote()));
+    connect(ui->ptree,SIGNAL(sigClick(QTreeWidgetItem*,int)),this,SLOT(slotClickTree(QTreeWidgetItem*,int)));
 
+    connect(this,SIGNAL(sigMessageBox(QString)),this,SLOT(slotMessageBox(QString)));
+    connect(this,SIGNAL(sigTextBrowser(QString)),ui->textBrowser,SLOT(append(QString)));
+    connect(this,SIGNAL(sigLineText(QString)),ui->lineEditHostpwd,SLOT(setText(QString)));
+    connect(this,SIGNAL(sigShowTable(plist<pmap<pstring,pstring> >,int)),ui->ptableRemote,SLOT(slotUpdateTable(plist<pmap<pstring,pstring> >,int)));
+    connect(this,SIGNAL(sigClearLocal()),ui->ptablelocal,SLOT(clear()));
+    connect(this,SIGNAL(sigClearRemote()),ui->ptableRemote,SLOT(clear()));
 
     connect(ui->ptableRemote,SIGNAL(sigDoubleClick(int,int)),this,SLOT(slotDoubleClickRemote(int,int)));
     connect(ui->ptablelocal,SIGNAL(sigDoubleClick(int,int)),this,SLOT(slotDoubleClickLocal(int,int)));
     connect(this,SIGNAL(sigShowJindu(QString)),this,SLOT(slotShowJindu(QString)));
     ui->ptableRemote->setHeaderText(QStringList()<<strname.c_str()<<strsize.c_str()<<strtype.c_str());
     ui->ptablelocal->setHeaderText(QStringList()<<strname.c_str()<<strsize.c_str()<<strtype.c_str());
-
-
-//    ui->ptablejindu->setHeaderText(QStringList()<<"名称"<<"速率"<<"传输百分比");
+    //    ui->ptablejindu->setHeaderText(QStringList()<<"名称"<<"速率"<<"传输百分比");
     ui->ptableRemote->setColWidth(0,500);
     ui->ptableRemote->setColWidth(1,100);
     ui->ptablelocal->setColWidth(0,500);
     ui->ptablelocal->setColWidth(1,100);
-//    ui->ptablejindu->setColWidth(0,600);
-    ptrans=new pscp(this->host,"root",this->pwd);
+    //    ui->ptablejindu->setColWidth(0,600);
 
-
-    showbyPathLocalWin();
-    showbyPathRemoteLinux();
-
+    //    showbyPathLocalWin();
+    //    showbyPathRemoteLinux();
 }
+void MainWindow::threadLinux()
+{
+    if(!threadShowbyPathRemoteLinux())
+    {
+        //        ui->ptablelocal->clear();
+        //        ui->ptableRemote->clear();
+        sigClearLocal();
+        sigClearRemote();
+    }
+    else
+        showbyPathLocalWin();
+}
+void MainWindow::slotClickTree(QTreeWidgetItem *item, int column)
+{
+    pstring strhost=(item->text(0).toStdString());
+    hlog(strhost);
+    ui->textBrowser->append(QString("连接服务器")+QString(strhost.c_str())+"中......");
+    //如果含有冒号,说明有端口,可能是带域名的,要分开
+    if(strhost.contain(":"))
+    {
+        pliststring lres=strhost.split(":");
+        this->host=lres[0];
+
+        this->port=stoi(lres[1]);
+    }
+    else
+    {
+        this->host=strhost;
+        this->port=22;
+    }
+    this->pwd=mall[strhost];
+    hlog(host,pwd,port);
+    ptrans=new pscp(this->host,"root",this->pwd,this->port);
+    std::thread thlinux(&MainWindow::threadLinux,this);
+    thlinux.detach();
+}
+
+void MainWindow::slotMessageBox(QString info)
+{
+    qlib::messageBox(info);
+}
+
 
 MainWindow::~MainWindow()
 {
@@ -101,88 +154,88 @@ MainWindow::~MainWindow()
 //log4j-1.2.17.jar          | 32 kB |  32.0 kB/s | ETA: 00:00:13 |   6%]
 void MainWindow::showstr(pstring str)
 {
-//    hlog(str);
+    //    hlog(str);
 
 
     pliststring lstrline=str.split("\r\n");
     hlog(lstrline);
     QString strNoReturn=lstrline[0].c_str();
     sigShowJindu(strNoReturn);
-//    qlog(lstrline.size());
-//    //每行按空格分,第一个和最后一个就是名称和进度
-//    for(int i=0;i<lstrline.size();i++)
-//    {
-//        pstring stri=lstrline[i];
-//        //        hlog(stri);
-//        if(!stri.contain("%"))
-//            continue;
-//        pliststring lstr=stri.split(" ");
-//        //        hlog(lstr);
-//        //    //取第一个是文件名,最后一个是百分比
-//        pstring name=lstr[0];
-//        pstring percent=lstr[lstr.size()-1];
-//        pstring speed;
-//        if(lstr.size()>6)
-//        {
-//            speed=lstr[5]+lstr[6];
-//        }
-//        hlog(name,percent,speed);
+    //    qlog(lstrline.size());
+    //    //每行按空格分,第一个和最后一个就是名称和进度
+    //    for(int i=0;i<lstrline.size();i++)
+    //    {
+    //        pstring stri=lstrline[i];
+    //        //        hlog(stri);
+    //        if(!stri.contain("%"))
+    //            continue;
+    //        pliststring lstr=stri.split(" ");
+    //        //        hlog(lstr);
+    //        //    //取第一个是文件名,最后一个是百分比
+    //        pstring name=lstr[0];
+    //        pstring percent=lstr[lstr.size()-1];
+    //        pstring speed;
+    //        if(lstr.size()>6)
+    //        {
+    //            speed=lstr[5]+lstr[6];
+    //        }
+    //        hlog(name,percent,speed);
 
-//        QString strName=qlib::toString(name);
-//        QString strPercent=qlib::toString(percent);
-//        QString strSpeed=qlib::toString(speed);
+    //        QString strName=qlib::toString(name);
+    //        QString strPercent=qlib::toString(percent);
+    //        QString strSpeed=qlib::toString(speed);
 
 
-//        qlog(strName,strPercent);
-//        //要增加上去 ,如果有就更新,如果没有就增加
-//        //先查一遍有没有
-//        int ifind=-1;
-//        for(int i=0;i<ui->ptablejindu->getRowCount();i++)
-//        {
-//            QString namei=ui->ptablejindu->getItemText(i,"名称");
-//            if(namei==strName)
-//            {
-//                ifind=i;
-//                break;
-//            }
-//        }
-//        //    hlog(ifind);
+    //        qlog(strName,strPercent);
+    //        //要增加上去 ,如果有就更新,如果没有就增加
+    //        //先查一遍有没有
+    //        int ifind=-1;
+    //        for(int i=0;i<ui->ptablejindu->getRowCount();i++)
+    //        {
+    //            QString namei=ui->ptablejindu->getItemText(i,"名称");
+    //            if(namei==strName)
+    //            {
+    //                ifind=i;
+    //                break;
+    //            }
+    //        }
+    //        //    hlog(ifind);
 
-//        //没找到,要在目前行数加一行,同时如果是100%了要更新
-//        if(ifind==-1)
-//        {
-//            int rowdst=ui->ptablejindu->getRowCount()+1;
+    //        //没找到,要在目前行数加一行,同时如果是100%了要更新
+    //        if(ifind==-1)
+    //        {
+    //            int rowdst=ui->ptablejindu->getRowCount()+1;
 
-//            ui->ptablejindu->setRowCount(rowdst);
-//            ui->ptablejindu->setItemText(rowdst-1,"名称",strName);
-//            ui->ptablejindu->setItemText(rowdst-1,"速率",strSpeed);
-//            ui->ptablejindu->setItemText(rowdst-1,"传输百分比",strPercent);
-//            hlog(strPercent);
-//            if(strPercent=="100%")
-//            {
-////                this->showbyPathLocalWin();
-////                hlog("###### trans finish #########");
-////                this->showbyPathRemoteLinux();
-////                qlog(rowdst);
-//                //最后要删除
-//                ui->ptablejindu->removeRow(rowdst-1);
-//            }
-//        }
-//        else//找到
-//        {
-//            ui->ptablejindu->setItemText(ifind,"名称",strName);
-//            ui->ptablejindu->setItemText(ifind,"速率",strSpeed);
-//            ui->ptablejindu->setItemText(ifind,"传输百分比",strPercent);
-//            hlog(strPercent);
-//            if(strPercent=="100%")
-//            {
-//                this->showbyPathLocalWin();
-//                this->showbyPathRemoteLinux();
-//                //最后要删除
-//                ui->ptablejindu->removeRow(ifind);
-//            }
-//        }
-//    }
+    //            ui->ptablejindu->setRowCount(rowdst);
+    //            ui->ptablejindu->setItemText(rowdst-1,"名称",strName);
+    //            ui->ptablejindu->setItemText(rowdst-1,"速率",strSpeed);
+    //            ui->ptablejindu->setItemText(rowdst-1,"传输百分比",strPercent);
+    //            hlog(strPercent);
+    //            if(strPercent=="100%")
+    //            {
+    ////                this->showbyPathLocalWin();
+    ////                hlog("###### trans finish #########");
+    ////                this->showbyPathRemoteLinux();
+    ////                qlog(rowdst);
+    //                //最后要删除
+    //                ui->ptablejindu->removeRow(rowdst-1);
+    //            }
+    //        }
+    //        else//找到
+    //        {
+    //            ui->ptablejindu->setItemText(ifind,"名称",strName);
+    //            ui->ptablejindu->setItemText(ifind,"速率",strSpeed);
+    //            ui->ptablejindu->setItemText(ifind,"传输百分比",strPercent);
+    //            hlog(strPercent);
+    //            if(strPercent=="100%")
+    //            {
+    //                this->showbyPathLocalWin();
+    //                this->showbyPathRemoteLinux();
+    //                //最后要删除
+    //                ui->ptablejindu->removeRow(ifind);
+    //            }
+    //        }
+    //    }
 }
 
 
@@ -218,7 +271,7 @@ void MainWindow::slotDoubleClickRemote(int row, int col)
         pstring pathres="/"+listpath.join("/");
         hlog(pathres);
         this->strpwdremote=pathres;
-        this->showbyPathRemoteLinux();
+        this->threadShowbyPathRemoteLinux();
         return;
     }
     //获取类型
@@ -236,7 +289,7 @@ void MainWindow::slotDoubleClickRemote(int row, int col)
             pathres=strpwdremote+"/"+strName.toStdString();
         hlog(pathres);
         this->strpwdremote=pathres;
-        this->showbyPathRemoteLinux();
+        this->threadShowbyPathRemoteLinux();
     }
     if(strType=="文件")
     {
@@ -340,27 +393,25 @@ void MainWindow::slotDoubleClickLocal(int row, int col)
     }
 }
 
-void MainWindow::showbyPathRemoteLinux()
+bool MainWindow::threadShowbyPathRemoteLinux()
 {
     //打印大小,文件名,以及类型,第一列是为了判断类型
     //去掉total的
     pstring strcmd="ls -l " +this->strpwdremote+" |grep -v total| awk '{print $5,$9,$1}'";
     hlog(strcmd);
-    //    strcmd="";
-    //    pstring strll=plib::xsh(host,strcmd,pwd);
-    //    pstring strll=getShellRes(strcmd.c_str()).toStdString();
-    //    pstring strll=qlib::qssh(host.c_str(),strcmd.c_str()).toStdString();
-    pstring strll=plib::xsh(host.c_str(),strcmd.c_str());
-//    hlog(strll);
-    //    hlog(strll);
+    pstring strll=plib::xsh(host.c_str(),strcmd.c_str(),pwd.c_str(),"root",this->port);
+    hlog(strll);
+    if(strll=="connect fail")
+    {
+        sigTextBrowser((pstring()<<"连接服务器"<<this->host<<"失败").c_str());
+        return false;
+    }
     qlog(this->strpwdremote);
     //显示当前路径指定路径
-    ui->lineEditHostpwd->setText(qlib::toString(this->strpwdremote));
+    sigLineText(qlib::toString(this->strpwdremote));
     hlog(host,pwd,strcmd,strll);
     pliststring listall=strll.split("\n");
     hlog(listall);
-    //    qlib::messageBox(listall[0].c_str());
-    //    qlib::messageBox(plib::toUTF8(listall[0].c_str()).c_str());
 
 
     plist<pmap<pstring,pstring> > lmall;
@@ -385,10 +436,11 @@ void MainWindow::showbyPathRemoteLinux()
         //第一列是大小,第二列是文件名或者文件夹名,第三列是类型
 
         pstring typei=listi[2];
+//        hlog(listi);
+//        hlog(typei);
         if(typei.contain("d"))
         {
             //如果是目录,且开头不是.,就是要去掉隐藏目录,才加入
-
             mapinfo.add(strtype,"目录");
             mapinfo.add(strsize,"");
             mapinfo.add(strname,listi[1]);
@@ -396,44 +448,39 @@ void MainWindow::showbyPathRemoteLinux()
         else if(typei.contain("l"))
         {
             continue;
-            //排除链接,因为容易出问题
-            //            //有l且有.是文件夹快捷方式,否则是文件快捷方式
-            //            if(typei.contain("."))
-            //            {
-            //                mapinfo.append(strtype,"目录快捷方式");
-            //                mapinfo[strsize]="";
-            //            }
-            //            else
-            //            {
-            //                mapinfo.append(strtype,"文件快捷方式");
-            //            }
         }
         else
         {
+//            hlog("this is a file");
             mapinfo.add(strtype,"文件");
             pstring strbytes=listi[0];
-            int iMB=stol(strbytes)*1.0/1024/1024;
+//            hlog(listi[0],strbytes);
+            int iMB=stoull(strbytes)*1.0/1024/1024;
+//            hlog(iMB);
             pstring stres=plib::toString(iMB)+" MB";//最终MB数
+//            hlog(stres);
             mapinfo.add(strsize,stres);
             mapinfo.add(strname,listi[1]);
         }
 
-        //        hlog(mapinfo);
+//                hlog(mapinfo);
         lmall.append(mapinfo);
     }
 
-    //    hlog(lmall);
+//        hlog(lmall);
     //显示当前路径下的所有文件以及文件夹
+    sigShowTable(lmall,0);
 
-    ui->ptableRemote->setRowCount(lmall.size());
-    for(int i=0;i<lmall.size();i++)
-    {
-        pmap<pstring,pstring> mapi=lmall[i];
-        ui->ptableRemote->setItemText(i,strname.c_str(),mapi[strname].c_str());
-        ui->ptableRemote->setItemText(i,strsize.c_str(),mapi[strsize].c_str());
-        ui->ptableRemote->setItemText(i,strtype.c_str(),mapi[strtype].c_str());
-    }
-
+    //    ui->ptableRemote->setRowCount(lmall.size());
+    //    for(int i=0;i<lmall.size();i++)
+    //    {
+    //        pmap<pstring,pstring> mapi=lmall[i];
+    //        ui->ptableRemote->setItemText(i,strname.c_str(),mapi[strname].c_str());
+    //        ui->ptableRemote->setItemText(i,strsize.c_str(),mapi[strsize].c_str());
+    //        ui->ptableRemote->setItemText(i,strtype.c_str(),mapi[strtype].c_str());
+    //    }
+    sigTextBrowser((pstring()<<"连接服务器"<<this->host<<"成功").c_str());
+    return true;
 }
 
 void MainWindow::showbyPathLocalWin()
@@ -563,15 +610,6 @@ void MainWindow::showbyPathLocalWin()
 
 }
 
-void MainWindow::on_pushButtonupdatelocal_clicked()
-{
-    showbyPathLocalWin();
-}
-
-void MainWindow::on_pushButton_3_clicked()
-{
-    showbyPathRemoteLinux();
-}
 
 void MainWindow::slotDelLocal()
 {
@@ -603,12 +641,13 @@ void MainWindow::slotDelRemote()
 
         pstring cmd="rm -rf "+pathFull;
         qlog(cmd);
-        plib::xshplink(this->host,cmd,this->pwd);
+        plib::xsh(this->host.c_str(),cmd,this->pwd.c_str(),"root",this->port);
+//        plib::xshplink(this->host,cmd,this->pwd);
         //        if(this->getShellRes(cmd.c_str())=="")
         //        {
         //            qlib::messageBox("删除失败");
         //        }
-        showbyPathRemoteLinux();
+        threadShowbyPathRemoteLinux();
     }
 }
 
@@ -694,7 +733,7 @@ void MainWindow::slotRenameRemote()
     pstring cmd="mv "+pathFull+" "+pathFullRemote;
     hlog(cmd);
     //    cmd=plib::toChinese(cmd);
-    hlog(plib::xsh(host.c_str(),cmd));
+    hlog(plib::xsh(host.c_str(),cmd,this->pwd.c_str(),"root",(port)));
 }
 
 
@@ -708,7 +747,10 @@ void MainWindow::slotShowJindu(QString jindu)
     ui->textBrowser->append(jindu);
     if(jindu=="end")
     {
-        this->showbyPathRemoteLinux();
+        this->threadShowbyPathRemoteLinux();
         this->showbyPathLocalWin();
     }
 }
+
+
+

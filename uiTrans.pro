@@ -16,15 +16,24 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     qlib/qlib.cpp \
     qlib/plib/plib.cpp \
-    xtablewidget.cpp
+    xtablewidget.cpp \
+    qtreewidgetexx.cpp \
+    xtreewidget.cpp
 
 HEADERS  += mainwindow.h \
     xtablewidget.h \
     qlib/qlib.h \
-    qlib/plib/plib.h
+    qlib/plib/plib.h \
+    qtreewidgetexx.h \
+    xtreewidget.h
 
 FORMS    += mainwindow.ui \
-    xtablewidget.ui
+    xtablewidget.ui \
+    qtreewidgetexx.ui \
+    xtreewidget.ui
 
 RESOURCES += \
     xlfd.qrc
+
+DISTFILES += \
+    host.conf
