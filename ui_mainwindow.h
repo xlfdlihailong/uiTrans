@@ -20,6 +20,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSplitter>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QVBoxLayout>
@@ -33,9 +34,12 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralWidget;
-    QVBoxLayout *verticalLayout_2;
-    QHBoxLayout *horizontalLayout_4;
+    QVBoxLayout *verticalLayout_3;
+    QSplitter *splitter;
     xTreeWidget *ptree;
+    QWidget *widget;
+    QHBoxLayout *horizontalLayout_2;
+    QVBoxLayout *verticalLayout_2;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout;
     QLabel *label_2;
@@ -61,28 +65,45 @@ public:
         MainWindow->setFont(font);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        verticalLayout_2 = new QVBoxLayout(centralWidget);
-        verticalLayout_2->setSpacing(6);
-        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
-        horizontalLayout_4 = new QHBoxLayout();
-        horizontalLayout_4->setSpacing(6);
-        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
-        ptree = new xTreeWidget(centralWidget);
+        verticalLayout_3 = new QVBoxLayout(centralWidget);
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
+        splitter = new QSplitter(centralWidget);
+        splitter->setObjectName(QStringLiteral("splitter"));
+        splitter->setOrientation(Qt::Horizontal);
+        ptree = new xTreeWidget(splitter);
         ptree->setObjectName(QStringLiteral("ptree"));
-        ptree->setMinimumSize(QSize(300, 300));
-        ptree->setMaximumSize(QSize(300, 16777215));
-
-        horizontalLayout_4->addWidget(ptree);
-
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy.setHorizontalStretch(1);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(ptree->sizePolicy().hasHeightForWidth());
+        ptree->setSizePolicy(sizePolicy);
+        ptree->setMinimumSize(QSize(200, 300));
+        ptree->setMaximumSize(QSize(16777215, 16777215));
+        splitter->addWidget(ptree);
+        widget = new QWidget(splitter);
+        widget->setObjectName(QStringLiteral("widget"));
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy1.setHorizontalStretch(7);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(widget->sizePolicy().hasHeightForWidth());
+        widget->setSizePolicy(sizePolicy1);
+        horizontalLayout_2 = new QHBoxLayout(widget);
+        horizontalLayout_2->setSpacing(0);
+        horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
+        verticalLayout_2 = new QVBoxLayout();
+        verticalLayout_2->setSpacing(0);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
         verticalLayout = new QVBoxLayout();
-        verticalLayout->setSpacing(9);
+        verticalLayout->setSpacing(6);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        verticalLayout->setContentsMargins(6, 6, 6, 6);
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(0);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        label_2 = new QLabel(centralWidget);
+        label_2 = new QLabel(widget);
         label_2->setObjectName(QStringLiteral("label_2"));
         QFont font1;
         font1.setFamily(QString::fromUtf8("\346\245\267\344\275\223"));
@@ -93,29 +114,29 @@ public:
 
         horizontalLayout->addWidget(label_2);
 
-        lineEditLocalpwd = new QLineEdit(centralWidget);
+        lineEditLocalpwd = new QLineEdit(widget);
         lineEditLocalpwd->setObjectName(QStringLiteral("lineEditLocalpwd"));
 
         horizontalLayout->addWidget(lineEditLocalpwd);
 
-        m_pLabelState = new QLabel(centralWidget);
+        m_pLabelState = new QLabel(widget);
         m_pLabelState->setObjectName(QStringLiteral("m_pLabelState"));
         m_pLabelState->setMinimumSize(QSize(0, 0));
 
         horizontalLayout->addWidget(m_pLabelState);
 
-        label = new QLabel(centralWidget);
+        label = new QLabel(widget);
         label->setObjectName(QStringLiteral("label"));
         label->setFont(font1);
 
         horizontalLayout->addWidget(label);
 
-        lineEditHostpwd = new QLineEdit(centralWidget);
+        lineEditHostpwd = new QLineEdit(widget);
         lineEditHostpwd->setObjectName(QStringLiteral("lineEditHostpwd"));
 
         horizontalLayout->addWidget(lineEditHostpwd);
 
-        pushButton = new QPushButton(centralWidget);
+        pushButton = new QPushButton(widget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
 
         horizontalLayout->addWidget(pushButton);
@@ -126,13 +147,13 @@ public:
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setSpacing(0);
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        ptablelocal = new xTableWidget(centralWidget);
+        ptablelocal = new xTableWidget(widget);
         ptablelocal->setObjectName(QStringLiteral("ptablelocal"));
         ptablelocal->setMinimumSize(QSize(222, 600));
 
         horizontalLayout_3->addWidget(ptablelocal);
 
-        ptableRemote = new xTableWidget(centralWidget);
+        ptableRemote = new xTableWidget(widget);
         ptableRemote->setObjectName(QStringLiteral("ptableRemote"));
         ptableRemote->setMinimumSize(QSize(222, 600));
 
@@ -141,7 +162,10 @@ public:
 
         verticalLayout->addLayout(horizontalLayout_3);
 
-        textBrowser = new QTextBrowser(centralWidget);
+
+        verticalLayout_2->addLayout(verticalLayout);
+
+        textBrowser = new QTextBrowser(widget);
         textBrowser->setObjectName(QStringLiteral("textBrowser"));
         textBrowser->setMaximumSize(QSize(16777215, 200));
         QFont font2;
@@ -151,13 +175,14 @@ public:
         font2.setWeight(75);
         textBrowser->setFont(font2);
 
-        verticalLayout->addWidget(textBrowser);
+        verticalLayout_2->addWidget(textBrowser);
 
 
-        horizontalLayout_4->addLayout(verticalLayout);
+        horizontalLayout_2->addLayout(verticalLayout_2);
 
+        splitter->addWidget(widget);
 
-        verticalLayout_2->addLayout(horizontalLayout_4);
+        verticalLayout_3->addWidget(splitter);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);

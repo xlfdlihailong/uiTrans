@@ -245,64 +245,76 @@ debug\qrc_xlfd.cpp: xlfd.qrc \
 		qss\flatwhite\branch_close.png \
 		qss\flatwhite\checkbox_parcial_disable.png \
 		qss\flatwhite\radiobutton_unchecked.png \
-		icons\checkin.png \
-		icons\largeInsertCaption.png \
-		icons\page_excel.png \
-		icons\save.png \
-		icons\smallinserttablefigures.png \
+		icons\gear--pencil.png \
+		icons\setoption.png \
+		icons\Exit_01.png \
+		icons\Compare1.bmp \
 		icons\floor.png \
-		icons\largeInsertFootnote.png \
+		icons\control-power.png \
+		icons\catalog.png \
 		icons\edit.png \
-		icons\smallnextfootnote.png \
+		icons\folder_go.png \
+		icons\logout.png \
+		icons\checkininfo.png \
+		icons\filter.png \
+		icons\Exit_01.bmp \
+		icons\largeInsertFootnote.png \
+		icons\statchart.png \
+		icons\reserv.png \
+		icons\largePrepare.png \
 		icons\redo.png \
+		icons\smallinserttablefigures.png \
+		icons\system64.png \
+		icons\largeInsertCaption.png \
+		icons\key--pencil.png \
 		icons\largeThemes.png \
-		icons\user--pencil.png \
-		icons\checkout.png \
-		icons\smartart16x16.png \
+		icons\address-book-open.png \
 		icons\receipts--plus.png \
+		icons\bujuw.png \
+		icons\group.png \
+		icons\center.png \
+		icons\checkrvinfo.png \
+		icons\user--pencil.png \
+		icons\reservin.png \
+		icons\picture--plus.png \
+		icons\find.png \
+		icons\6.png \
 		icons\system.png \
 		icons\qtitanlogo32x32.png \
-		icons\switch.png \
-		icons\documents-stack.png \
-		icons\picture.png \
-		icons\address-book-open.png \
-		icons\plus-shield.png \
-		icons\pagecolor16x16.png \
-		icons\bank.png \
-		icons\history.png \
-		icons\checkininfo.png \
-		icons\guestinfo.png \
-		icons\center.png \
-		icons\folder_go.png \
+		icons\close2.png \
+		icons\smallnextfootnote.png \
 		icons\printer.png \
-		icons\largeoutline.png \
-		icons\largefullscreen.png \
-		icons\control-power.png \
-		icons\filter.png \
-		icons\reservin.png \
-		icons\find.png \
-		icons\key--pencil.png \
-		icons\checkrvinfo.png \
-		icons\user.png \
-		icons\largePrepare.png \
-		icons\logout.png \
 		icons\folder_wrench.png \
-		icons\catalog.png \
-		icons\gear--pencil.png \
-		icons\hotel.png \
-		icons\manage.png \
-		icons\up.png \
+		icons\close.png \
 		icons\delete.png \
-		icons\table.png \
-		icons\picture--plus.png \
-		icons\statchart.png \
+		icons\save.png \
+		icons\switch.png \
+		icons\manage.png \
+		icons\checkin.png \
 		icons\search.png \
-		icons\doc.png \
+		icons\up.png \
+		icons\largeoutline.png \
+		icons\bank.png \
+		icons\checkout.png \
 		icons\stat.png \
 		icons\sum.png \
-		icons\reserv.png \
-		icons\system64.png \
-		icons\group.png
+		icons\page_excel.png \
+		icons\9.png \
+		icons\picture.png \
+		icons\guestinfo.png \
+		icons\largefullscreen.png \
+		icons\table.png \
+		icons\plus-shield.png \
+		icons\user.png \
+		icons\hotel.png \
+		icons\smartart16x16.png \
+		icons\documents-stack.png \
+		icons\4.png \
+		icons\doc.png \
+		icons\history.png \
+		icons\2x2.png \
+		icons\pagecolor16x16.png \
+		icons\diany.png
 	C:\Qt\Qt5.5.0\5.5\msvc2013\bin\rcc.exe -name xlfd xlfd.qrc -o debug\qrc_xlfd.cpp
 
 compiler_moc_header_make_all: debug\moc_mainwindow.cpp debug\moc_xtablewidget.cpp debug\moc_qtreewidgetexx.cpp debug\moc_xtreewidget.cpp
